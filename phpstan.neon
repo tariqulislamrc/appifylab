@@ -1,0 +1,13 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    - vendor/nesbot/carbon/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database/factories
+        - database/seeders
+    level: 8
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+    excludePaths:
