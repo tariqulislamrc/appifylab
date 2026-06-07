@@ -118,6 +118,27 @@ npm install
 npm run build
 ```
 
+### 9. (Optional) Seed demo data
+
+```bash
+php artisan db:seed
+```
+
+This creates **21 users** (20 random + 1 known dev account), each with 3–10 posts, nested comments, replies, and likes spread across all content.
+
+---
+
+## Demo Credentials
+
+After seeding, you can log in immediately with:
+
+| Field | Value |
+|---|---|
+| Email | `dev@example.com` |
+| Password | `password` |
+
+All randomly generated users also share the same password: `password`.
+
 ---
 
 ## Quick Setup (one command)
