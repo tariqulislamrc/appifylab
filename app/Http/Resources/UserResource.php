@@ -24,7 +24,7 @@ final class UserResource extends JsonResource
             'last_name' => $user->last_name,
             'full_name' => $user->full_name,
             'email' => $user->email,
-            'avatar_url' => $user->avatar ? asset('storage/'.$user->avatar) : null,
+            'avatar_url' => $user->avatar_url,
         ];
     }
 }

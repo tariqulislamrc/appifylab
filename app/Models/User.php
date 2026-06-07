@@ -8,9 +8,9 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Override;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -23,6 +23,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read string $full_name
+ * @property-read string $avatar_url
  */
 #[Fillable(['first_name', 'last_name', 'email', 'password', 'avatar'])]
 #[Hidden(['password'])]
@@ -30,6 +31,14 @@ final class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    #[\Override]
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 
     public function getJWTIdentifier(): mixed
     {
@@ -47,11 +56,26 @@ final class User extends Authenticatable implements JWTSubject
         return "{$this->first_name} {$this->last_name}";
     }
 
-    #[Override]
-    protected function casts(): array
+    public function getAvatarUrlAttribute(): ?string
     {
-        return [
-            'password' => 'hashed',
-        ];
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+    }
+
+    /** @return HasMany<Post, $this> */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /** @return HasMany<Comment, $this> */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /** @return HasMany<Like, $this> */
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
     }
 }

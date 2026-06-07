@@ -1,0 +1,3 @@
+._feed_inner_text_area_box_form > ._textarea:not(:placeholder-shown) ~ ._feed_textarea_label {
+    opacity: 0;
+}

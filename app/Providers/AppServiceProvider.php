@@ -5,7 +5,13 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Repositories\Interfaces\AuthRepositoryInterface;
+use App\Repositories\Interfaces\CommentRepositoryInterface;
+use App\Repositories\Interfaces\LikeRepositoryInterface;
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Repositories\UserRepository;
+use App\Repositories\LikeRepository;
+use App\Repositories\PostRepository;
+use App\Repositories\CommentRepository;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +29,9 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(AuthRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
+        $this->app->bind(CommentRepositoryInterface::class, CommentRepository::class);
+        $this->app->bind(LikeRepositoryInterface::class, LikeRepository::class);
     }
 
     public function boot(): void
