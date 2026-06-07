@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { usePageTitle } from '../hooks/usePageTitle';
 import type { LoginPayload } from '../types';
-import * as React from "react";
 
 export default function Login() {
     usePageTitle('Login');
@@ -83,9 +82,9 @@ export default function Login() {
                                     <span>Or</span>
                                 </div>
 
-                                {fieldError('credentials') && (
+                                {(fieldError('credentials') || fieldError('general')) && (
                                     <div className="alert alert-danger py-2 mb-3" role="alert">
-                                        {fieldError('credentials')}
+                                        {fieldError('credentials') ?? fieldError('general')}
                                     </div>
                                 )}
 
