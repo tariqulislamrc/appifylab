@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Actions\Comment\CreateCommentAction;
@@ -14,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     public function index(Post $post): AnonymousResourceCollection
     {

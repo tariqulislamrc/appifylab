@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Post;
 
 use App\DTOs\CreatePostDTO;
@@ -12,7 +14,7 @@ final readonly class CreatePostAction
 {
     public function __construct(
         private PostRepositoryInterface $postRepository,
-        private ImageUploadService      $imageUploadService,
+        private ImageUploadService $imageUploadService,
     ) {}
 
     public function execute(CreatePostDTO $dto): Post

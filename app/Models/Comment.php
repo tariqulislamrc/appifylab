@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\CommentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,15 +23,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
- *
  * @property BelongsTo<Post, $this> $post
  * @property BelongsTo<User, $this> $user
  * @property BelongsTo<Comment, $this> $parent
  * @property HasMany<Comment, $this> $replies
- * @property MorphMany<Like, $this> $likes
+ * @property Collection<int, Like> $likes
  */
 #[Fillable(['post_id', 'user_id', 'parent_id', 'body'])]
-class Comment extends Model
+final class Comment extends Model
 {
     /** @use HasFactory<CommentFactory> */
     use HasFactory, SoftDeletes;
@@ -48,13 +50,13 @@ class Comment extends Model
     /** @return BelongsTo<Comment, $this> */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(__CLASS__, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     /** @return HasMany<Comment, $this> */
     public function replies(): HasMany
     {
-        return $this->hasMany(__CLASS__, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     /** @return MorphMany<Like, $this> */

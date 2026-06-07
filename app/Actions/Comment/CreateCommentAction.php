@@ -10,7 +10,7 @@ use App\Repositories\Interfaces\CommentRepositoryInterface;
 
 final readonly class CreateCommentAction
 {
-    public function __construct(private readonly CommentRepositoryInterface $commentRepository) {}
+    public function __construct(private CommentRepositoryInterface $commentRepository) {}
 
     public function execute(CreateCommentDTO $dto): Comment
     {

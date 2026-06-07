@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Actions\Post\CreatePostAction;
@@ -14,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Gate;
 
-class PostController extends Controller
+final class PostController extends Controller
 {
     public function index(PostRepositoryInterface $postRepository): AnonymousResourceCollection
     {

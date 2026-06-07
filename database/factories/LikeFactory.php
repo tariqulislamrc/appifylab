@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Like;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends Factory<Like>
  */
-class LikeFactory extends Factory
+final class LikeFactory extends Factory
 {
     /** @return array<string, mixed> */
     public function definition(): array

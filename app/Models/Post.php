@@ -1,42 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Override;
 
 /**
  * @property int $id
  * @property int $user_id
  * @property string $body
- * @property boolean $is_private
+ * @property bool $is_private
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property \Carbon\CarbonImmutable|null $deleted_at
- *
- * @property MorphMany<Like, $this> $likes
+ * @property Collection<int, Like> $likes
  */
-
 #[Fillable(['user_id', 'body', 'is_private'])]
-class Post extends Model
+final class Post extends Model
 {
     /** @use HasFactory<PostFactory> */
     use HasFactory, SoftDeletes;
-
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'is_private' => 'boolean',
-        ];
-    }
 
     /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
@@ -86,5 +80,12 @@ class Post extends Model
                 });
         });
     }
-}
 
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'is_private' => 'boolean',
+        ];
+    }
+}

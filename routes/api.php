@@ -6,7 +6,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\ReplyController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {

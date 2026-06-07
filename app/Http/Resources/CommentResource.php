@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
-class CommentResource extends JsonResource
+final class CommentResource extends JsonResource
 {
     /** @return array<string, mixed> */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         /** @var Comment $comment */
@@ -24,9 +27,7 @@ class CommentResource extends JsonResource
             'user' => new UserResource($comment->user),
             'body' => $comment->body,
             'likes_count' => $comment->likes_count ?? $comment->likes()->count(),
-            'is_liked_by_me' => $authUser
-                ? $comment->likes->contains('user_id', $authUser->id)
-                : false,
+            'is_liked_by_me' => $authUser && $comment->likes->contains('user_id', $authUser->id),
             'replies_count' => $comment->replies_count ?? $comment->replies()->count(),
             'replies' => self::collection($comment->replies),
             'created_at' => $comment->created_at?->toISOString(),

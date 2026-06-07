@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -37,7 +39,7 @@ test('authenticated user can create a post with an image', function (): void {
     $response->assertStatus(201)
         ->assertJsonCount(1, 'data.images');
 
-    Storage::disk('public')->assertExists($response->json('data.images.0.url') ? ltrim(parse_url((string) $response->json('data.images.0.url'), PHP_URL_PATH), '/storage/') : '');
+    Storage::disk('public')->assertExists($response->json('data.images.0.url') ? mb_ltrim(parse_url((string) $response->json('data.images.0.url'), PHP_URL_PATH), '/storage/') : '');
 });
 
 test('authenticated user can create a private post', function (): void {

@@ -7,11 +7,12 @@ namespace App\Http\Resources;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
-class LikeResource extends JsonResource
+final class LikeResource extends JsonResource
 {
     /** @return array<string, mixed> */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         /** @var Like $like */

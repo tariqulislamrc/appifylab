@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -14,12 +16,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int $likeable_id
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- *
- * @property BelongsTo<User, $this> $user
+ * @property-read User|null $use
  */
-
 #[Fillable(['user_id', 'likeable_type', 'likeable_id'])]
-class Like extends Model
+final class Like extends Model
 {
     /** @return MorphTo<Model, $this> */
     public function likeable(): MorphTo

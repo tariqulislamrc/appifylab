@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\Models\Like;
@@ -8,7 +10,7 @@ use App\Repositories\Interfaces\LikeRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-class LikeRepository implements LikeRepositoryInterface
+final class LikeRepository implements LikeRepositoryInterface
 {
     /** @return array{liked: bool, likes_count: int} */
     public function toggle(User $user, Model $likeable): array

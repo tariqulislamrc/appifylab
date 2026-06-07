@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\DTOs\CreateCommentDTO;
 use App\Models\Comment;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 
-class CommentRepository implements CommentRepositoryInterface
+final class CommentRepository implements CommentRepositoryInterface
 {
     public function create(CreateCommentDTO $dto): Comment
     {

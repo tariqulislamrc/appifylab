@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -14,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property \Carbon\CarbonImmutable|null $updated_at
  */
 #[Fillable(['post_id', 'path'])]
-class PostImage extends Model
+final class PostImage extends Model
 {
     /** @return BelongsTo<Post, $this> */
     public function post(): BelongsTo

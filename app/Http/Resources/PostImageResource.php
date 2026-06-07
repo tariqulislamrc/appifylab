@@ -7,11 +7,12 @@ namespace App\Http\Resources;
 use App\Models\PostImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
-class PostImageResource extends JsonResource
+final class PostImageResource extends JsonResource
 {
     /** @return array<string, mixed> */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         /** @var PostImage $image */

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Override;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -32,14 +33,6 @@ final class User extends Authenticatable implements JWTSubject
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    #[\Override]
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-        ];
-    }
-
     public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
@@ -58,7 +51,7 @@ final class User extends Authenticatable implements JWTSubject
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar ? asset('storage/' . $this->avatar) : null;
+        return $this->avatar ? asset('storage/'.$this->avatar) : null;
     }
 
     /** @return HasMany<Post, $this> */
@@ -77,5 +70,13 @@ final class User extends Authenticatable implements JWTSubject
     public function likes(): HasMany
     {
         return $this->hasMany(Like::class);
+    }
+
+    #[Override]
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
     }
 }

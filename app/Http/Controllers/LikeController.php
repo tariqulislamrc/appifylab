@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Actions\Like\ToggleLikeAction;
@@ -11,7 +13,7 @@ use App\Repositories\Interfaces\LikeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-class LikeController extends Controller
+final class LikeController extends Controller
 {
     public function togglePost(Post $post, ToggleLikeAction $action): JsonResponse
     {

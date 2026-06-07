@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repositories;
 
 use App\DTOs\CreatePostDTO;
@@ -8,7 +10,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\PostRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class PostRepository implements PostRepositoryInterface
+final class PostRepository implements PostRepositoryInterface
 {
     /**
      * @return LengthAwarePaginator<int, Post>
