@@ -21,32 +21,32 @@ final class DatabaseSeeder extends Seeder
             'email' => 'dev@example.com',
         ]);
 
-        // 9 additional random users (10 total)
-        $users = User::factory(9)->create();
+        // 50 additional random users (51 total)
+        $users = User::factory(50)->create();
         $users->push($devUser);
 
-        // Each user gets 3–6 posts (mix of public/private)
+        // Each user gets 3–20 posts (mix of public/private)
         $users->each(function (User $user) use ($users): void {
-            $posts = Post::factory(fake()->numberBetween(3, 6))
+            $posts = Post::factory(fake()->numberBetween(3, 20))
                 ->for($user)
                 ->create();
 
             $posts->each(function (Post $post) use ($users): void {
-                // 0–4 comments per post from random users
-                $comments = Comment::factory(fake()->numberBetween(0, 4))
+                // 0–50 comments per post from random users
+                $comments = Comment::factory(fake()->numberBetween(0, 50))
                     ->for($post)
                     ->for($users->random(), 'user')
                     ->create();
 
                 $comments->each(function (Comment $comment) use ($users): void {
-                    // 0–3 replies per comment
-                    Comment::factory(fake()->numberBetween(0, 3))
+                    // 0–50 replies per comment
+                    Comment::factory(fake()->numberBetween(0, 50))
                         ->asReply($comment)
                         ->for($users->random(), 'user')
                         ->create();
 
-                    // 0–5 users like each comment
-                    $users->random(fake()->numberBetween(0, 5))
+                    // 0–50 users like each comment
+                    $users->random(fake()->numberBetween(0, 50))
                         ->each(function (User $liker) use ($comment): void {
                             Like::firstOrCreate([
                                 'user_id' => $liker->id,
@@ -56,8 +56,8 @@ final class DatabaseSeeder extends Seeder
                         });
                 });
 
-                // 0–8 users like each post
-                $users->random(fake()->numberBetween(0, 8))
+                // 0–50 users like each post
+                $users->random(fake()->numberBetween(0, 50))
                     ->each(function (User $liker) use ($post): void {
                         Like::query()->firstOrCreate([
                             'user_id' => $liker->id,
@@ -70,7 +70,7 @@ final class DatabaseSeeder extends Seeder
 
         // Seed reply likes separately after all replies exist
         Comment::query()->whereNotNull('parent_id')->each(function (Comment $reply) use ($users): void {
-            $users->random(fake()->numberBetween(0, 4))
+            $users->random(fake()->numberBetween(0, 50))
                 ->each(function (User $liker) use ($reply): void {
                     Like::query()->firstOrCreate([
                         'user_id' => $liker->id,
