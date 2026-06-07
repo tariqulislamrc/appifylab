@@ -51,7 +51,7 @@ final class User extends Authenticatable implements JWTSubject
 
     public function getAvatarUrlAttribute(): ?string
     {
-        return $this->avatar ? asset('storage/'.$this->avatar) :  'https://ui-avatars.com/api/?name='.urlencode($this->full_name).'&background=random&color=fff&size=128';
+        return $this->avatar ? asset('storage/'.$this->avatar) :  'https://ui-avatars.com/api/?name='.urlencode($this->full_name).'&background=random&color=fff&size=128&rounded=true';
     }
 
     /** @return HasMany<Post, $this> */

@@ -29,7 +29,7 @@ final class CommentResource extends JsonResource
             'likes_count' => $comment->likes_count ?? $comment->likes()->count(),
             'is_liked_by_me' => $authUser && $comment->likes->contains('user_id', $authUser->id),
             'replies_count' => $comment->replies_count ?? $comment->replies()->count(),
-            'replies' => self::collection($comment->replies),
+            'replies' => self::collection($this->whenLoaded('replies')),
             'created_at' => $comment->created_at?->toISOString(),
         ];
     }
