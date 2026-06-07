@@ -7,6 +7,7 @@ import PostComposer from '../components/PostComposer';
 import PostCard from '../components/PostCard';
 import { usePageTitle } from '../hooks/usePageTitle';
 import type { Post } from '../types';
+import DarkModeToggle from "../components/DarkModeToggle";
 
 interface PaginationMeta {
     current_page: number;
@@ -80,7 +81,7 @@ export default function Feed() {
 
     return (
         <div className="_layout _layout_main_wrapper">
-
+            <DarkModeToggle />
             <div className="_main_layout">
                 <Navbar />
 
