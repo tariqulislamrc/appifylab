@@ -19,7 +19,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
     const avatarSrc = user?.avatar_url || '/assets/images/Avatar.png';
 
     function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
-        const files = Array.from(e.target.files ?? []).slice(0, 5);
+        const files = Array.from(e.target.files ?? []).slice(0, 1);
         setImages(files);
         setPreviews(files.map((f) => URL.createObjectURL(f)));
     }
@@ -106,7 +106,6 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                                 ref={fileRef}
                                 type="file"
                                 accept="image/jpg,image/jpeg,image/png,image/webp"
-                                multiple
                                 className="d-none"
                                 onChange={handleFiles}
                             />

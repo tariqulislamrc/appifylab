@@ -19,7 +19,7 @@ final class CreatePostRequest extends FormRequest
         return [
             'body' => ['nullable', 'string', 'max:5000'],
             'is_private' => ['nullable', 'boolean'],
-            'images' => ['nullable', 'array', 'max:5'],
+            'images' => ['nullable', 'array', 'max:1'],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ];
     }
