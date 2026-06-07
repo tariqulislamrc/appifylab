@@ -134,7 +134,7 @@
     flex-direction: column;
 }
 ._layout_inner_wrap1 {
-    top: -16px; 
+    top: -16px;
 }
 ._layout_wrap {
     padding:25px 0;
@@ -3456,7 +3456,7 @@
 ._dark_wrapper ._feed_reaction:hover {
     background: #123150;
 }
-._dark_wrapper ._feed_inner_timeline_total_reacts_para1 a {
+._dark_wrapper ._feed_inner_timeline_total_reacts_para1 a,button {
     color: rgba(255, 255, 255, 0.46);
 }
 ._dark_wrapper ._feed_inner_timeline_total_reacts_para2{
