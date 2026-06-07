@@ -1,7 +1,11 @@
 import { useRef, useState } from 'react';
+import type { AxiosError } from 'axios';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import type { Post } from '../types';
+
+const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 
 interface PostComposerProps {
     onPostCreated: (post: Post) => void;
@@ -14,14 +18,22 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [uploadErrors, setUploadErrors] = useState<string[]>([]);
     const fileRef = useRef<HTMLInputElement>(null);
 
     const avatarSrc = user?.avatar_url || '/assets/images/Avatar.png';
 
     function handleFiles(e: React.ChangeEvent<HTMLInputElement>) {
-        const files = Array.from(e.target.files ?? []).slice(0, 1);
-        setImages(files);
-        setPreviews(files.map((f) => URL.createObjectURL(f)));
+        const selected = Array.from(e.target.files ?? []).slice(0, 5);
+        const oversized = selected.filter((f) => f.size > MAX_FILE_SIZE_BYTES);
+        if (oversized.length > 0) {
+            setUploadErrors([`Each image must be under ${MAX_FILE_SIZE_MB}MB. Please select smaller files.`]);
+            e.target.value = '';
+            return;
+        }
+        setUploadErrors([]);
+        setImages(selected);
+        setPreviews(selected.map((f) => URL.createObjectURL(f)));
         e.target.value = '';
     }
 
@@ -51,6 +63,19 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
             setImages([]);
             previews.forEach((url) => URL.revokeObjectURL(url));
             setPreviews([]);
+            setUploadErrors([]);
+        } catch (err) {
+            const axiosError = err as AxiosError<{ errors?: Record<string, string[]>; message?: string }>;
+            const validationErrors = axiosError.response?.data?.errors;
+            if (validationErrors && Object.keys(validationErrors).length > 0) {
+                const messages = Object.entries(validationErrors).flatMap(([field, msgs]) =>
+                    msgs.map((msg) => msg.replace(/images\.\d+/g, 'image').replace(/^images\b/, 'images'))
+                );
+                setUploadErrors(messages);
+            } else {
+                const fallback = axiosError.response?.data?.message ?? 'Failed to create post. Please try again.';
+                setUploadErrors([fallback]);
+            }
         } finally {
             setLoading(false);
         }
@@ -110,6 +135,18 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                     </div>
                 )}
 
+                {uploadErrors.length > 0 && (
+                    <div className="alert alert-danger py-2 mt-2 mb-0 small" role="alert">
+                        {uploadErrors.length === 1 ? (
+                            uploadErrors[0]
+                        ) : (
+                            <ul className="mb-0 ps-3">
+                                {uploadErrors.map((msg, i) => <li key={i}>{msg}</li>)}
+                            </ul>
+                        )}
+                    </div>
+                )}
+
                 <div className="_feed_inner_text_area_bottom">
                     <div className="_feed_inner_text_area_item">
                         {/* Photo upload */}
@@ -130,6 +167,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                                 ref={fileRef}
                                 type="file"
                                 accept="image/jpg,image/jpeg,image/png,image/webp"
+                                multiple
                                 className="d-none"
                                 onChange={handleFiles}
                             />
