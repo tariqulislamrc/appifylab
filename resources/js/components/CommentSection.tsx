@@ -10,11 +10,28 @@ interface CommentSectionProps {
     open: boolean;
 }
 
+interface PaginationMeta {
+    currentPage: number;
+    lastPage: number;
+    total: number;
+}
+
+interface CommentsResponse {
+    data: Comment[];
+    meta: {
+        current_page: number;
+        last_page: number;
+        total: number;
+    };
+}
+
 export default function CommentSection({ postId, onCountChange, open }: CommentSectionProps) {
     const { user } = useAuth();
     const [comments, setComments] = useState<Comment[]>([]);
+    const [meta, setMeta] = useState<PaginationMeta | null>(null);
     const [loaded, setLoaded] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
     const [body, setBody] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
@@ -23,11 +40,37 @@ export default function CommentSection({ postId, onCountChange, open }: CommentS
     useEffect(() => {
         if (open && !loaded) {
             setLoading(true);
-            api.get<{ data: Comment[] }>(`/posts/${postId}/comments`)
-                .then(({ data }) => { setComments(data.data ?? []); setLoaded(true); })
+            api.get<CommentsResponse>(`/posts/${postId}/comments?page=1`)
+                .then(({ data }) => {
+                    setComments(data.data ?? []);
+                    setMeta({
+                        currentPage: data.meta.current_page,
+                        lastPage: data.meta.last_page,
+                        total: data.meta.total,
+                    });
+                    setLoaded(true);
+                })
                 .finally(() => setLoading(false));
         }
     }, [open, loaded, postId]);
+
+    async function loadPreviousComments() {
+        if (!meta || meta.currentPage >= meta.lastPage || loadingMore) return;
+        setLoadingMore(true);
+        try {
+            const { data } = await api.get<CommentsResponse>(
+                `/posts/${postId}/comments?page=${meta.currentPage + 1}`,
+            );
+            setComments((prev) => [...prev, ...data.data]);
+            setMeta({
+                currentPage: data.meta.current_page,
+                lastPage: data.meta.last_page,
+                total: data.meta.total,
+            });
+        } finally {
+            setLoadingMore(false);
+        }
+    }
 
     async function submitComment() {
         if (!body.trim()) return;
@@ -51,6 +94,9 @@ export default function CommentSection({ postId, onCountChange, open }: CommentS
         setComments((prev) => prev.filter((c) => c.id !== id));
         onCountChange?.((n) => Math.max(0, n - 1));
     }
+
+    const remainingCount = meta ? meta.total - comments.length : 0;
+    const hasMore = meta !== null && meta.currentPage < meta.lastPage;
 
     return (
         <div className="_feed_inner_timeline_cooment_area">
@@ -100,9 +146,24 @@ export default function CommentSection({ postId, onCountChange, open }: CommentS
             {open && (
                 <div className="_timline_comment_main">
                     {loading && <p className="text-center text-muted py-2 small">Loading comments…</p>}
+
                     {!loading && loaded && comments.length === 0 && (
                         <p className="text-center text-muted py-2 small">No comments yet. Be the first to comment!</p>
                     )}
+
+                    {hasMore && (
+                        <div className="_previous_comment">
+                            <button
+                                type="button"
+                                className="_previous_comment_txt"
+                                onClick={loadPreviousComments}
+                                disabled={loadingMore}
+                            >
+                                {loadingMore ? 'Loading…' : `View ${remainingCount} previous comment${remainingCount !== 1 ? 's' : ''}`}
+                            </button>
+                        </div>
+                    )}
+
                     {comments.map((comment) => (
                         <CommentItem key={comment.id} comment={comment} onDeleted={handleDeleted} />
                     ))}
