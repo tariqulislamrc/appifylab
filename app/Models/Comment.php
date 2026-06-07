@@ -35,6 +35,13 @@ final class Comment extends Model
     /** @use HasFactory<CommentFactory> */
     use HasFactory, SoftDeletes;
 
+    /** @var array<string, string> */
+    protected $casts = [
+        'post_id' => 'integer',
+        'user_id' => 'integer',
+        'parent_id' => 'integer',
+    ];
+
     /** @return BelongsTo<Post, $this> */
     public function post(): BelongsTo
     {
