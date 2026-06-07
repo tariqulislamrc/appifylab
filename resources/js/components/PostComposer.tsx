@@ -22,6 +22,13 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
         const files = Array.from(e.target.files ?? []).slice(0, 1);
         setImages(files);
         setPreviews(files.map((f) => URL.createObjectURL(f)));
+        e.target.value = '';
+    }
+
+    function removeImage(index: number) {
+        URL.revokeObjectURL(previews[index]);
+        setImages((prev) => prev.filter((_, i) => i !== index));
+        setPreviews((prev) => prev.filter((_, i) => i !== index));
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -42,6 +49,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
             setBody('');
             setIsPrivate(false);
             setImages([]);
+            previews.forEach((url) => URL.revokeObjectURL(url));
             setPreviews([]);
         } finally {
             setLoading(false);
@@ -58,7 +66,7 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                     <div className="form-floating _feed_inner_text_area_box_form">
                         <textarea
                             className="form-control _textarea"
-                            placeholder="Write something..."
+                            placeholder=" "
                             id="postBody"
                             value={body}
                             onChange={(e) => setBody(e.target.value)}
@@ -76,12 +84,28 @@ export default function PostComposer({ onPostCreated }: PostComposerProps) {
                 {previews.length > 0 && (
                     <div className="d-flex flex-wrap gap-2 mt-2">
                         {previews.map((src, i) => (
-                            <img
-                                key={i}
-                                src={src}
-                                alt=""
-                                style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 6 }}
-                            />
+                            <div key={i} style={{ position: 'relative', width: 80, height: 80 }}>
+                                <img
+                                    src={src}
+                                    alt=""
+                                    style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 6 }}
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => removeImage(i)}
+                                    style={{
+                                        position: 'absolute', top: 3, right: 3,
+                                        width: 20, height: 20, borderRadius: '50%',
+                                        background: 'rgba(0,0,0,0.6)', border: 'none',
+                                        color: '#fff', fontSize: 12, lineHeight: 1,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        cursor: 'pointer', padding: 0,
+                                    }}
+                                    aria-label="Remove image"
+                                >
+                                    ×
+                                </button>
+                            </div>
                         ))}
                     </div>
                 )}
